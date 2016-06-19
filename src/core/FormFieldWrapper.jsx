@@ -16,7 +16,6 @@ export default class FormFieldWrapper extends Component {
     }
 
     render() {
-        console.log('renderFormFieldWrapper');
         const { id, value } = this.fieldValidity;
         return this.props.renderFormField( id, value, this.onChange.bind( this ), this.fieldValidity );
     }

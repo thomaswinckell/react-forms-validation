@@ -1,12 +1,11 @@
-/* @flow */
-
 /* Core */
 export FormValidity, {
-    FormStatus,
+    FormStatuses,
     FormFieldValidity
-}                       from './core/FormValidity';
-export *                from './core/Constraints';
-export FormFieldWrapper from './core/FormFieldWrapper';
+}                           from './core/FormValidity';
+export type { FormStatus }  from './core/FormValidity';
+export FormFieldWrapper     from './core/FormFieldWrapper';
+export *                    from './core/constraints';
 
 /* DOM */
 export Form             from './dom/Form';

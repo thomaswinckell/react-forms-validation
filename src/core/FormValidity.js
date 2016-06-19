@@ -5,20 +5,23 @@ import _ from 'lodash';
 import type { Constraint } from  './Constraints';
 
 
-export const FormStatus = {
+export const FormStatuses = {
     pristine : 'pristine',
     dirty    : 'dirty'
 };
 
+export type FormStatus = $Keys<typeof FormStatuses>;
+
 
 export default class FormValidity {
-    fields : object = {};
 
-    constructor( fields : object = {} ) {
+    fields : Object;
+
+    constructor( fields : Object = {} ) {
         this.fields = fields;
     }
 
-    static fromModel( model : object ) : FormValidity {
+    static fromModel( model : Object ) : FormValidity {
         if( !model.constructor ) {
             throw 'Form value should have a constructor';
         }
@@ -34,18 +37,18 @@ export default class FormValidity {
         const constraints = model.constructor.__constraints || {};
         let fields = {};
         _.keys( constraints ).forEach( prop => {
-            fields[ prop ] = new FormFieldValidity( prop, model[ prop ], constraints[ prop ], FormStatus.pristine );
+            fields[ prop ] = new FormFieldValidity( prop, model[ prop ], constraints[ prop ], FormStatuses.pristine );
         } );
         return new FormValidity( fields );
     }
 
-    get status() {
+    get status() : FormStatus {
         for( let key of _.keys( this.fields ) ) {
-            if ( this.fields[ key ].status === FormStatus.dirty ) {
-                return FormStatus.dirty;
+            if ( this.fields[ key ].status === FormStatuses.dirty ) {
+                return FormStatuses.dirty;
             }
         }
-        return FormStatus.pristine;
+        return FormStatuses.pristine;
     }
 
     isValid() : boolean {
@@ -70,7 +73,7 @@ export class FormFieldValidity {
     status                  : FormStatus;
     unsatisfiedConstraints  : Array< Constraint >;
 
-    constructor( id : string, value : ?any = null, constraints : Array< Constraint > = [], status : FormStatus = FormStatus.pristine ) {
+    constructor( id : string, value : ?any = null, constraints : Array< Constraint > = [], status : FormStatus = FormStatuses.pristine ) {
         this.id                     = id;
         this._value                 = value;
         this.constraints            = constraints;
@@ -82,7 +85,7 @@ export class FormFieldValidity {
 
     set value( value : ?any ) {
         this._value = value;
-        this.status = FormStatus.dirty;
+        this.status = FormStatuses.dirty;
     }
 
     checkValidity() {

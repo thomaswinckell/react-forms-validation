@@ -7,13 +7,21 @@ import FormFieldWrapper                     from './FormFieldWrapper';
 import FormValidity, { FormFieldValidity }  from './FormValidity';
 
 
+export type AbstractFormProps = {
+    triggerOnChangeOnInit : boolean,
+    value                 : Object,
+    onChange              : ( value : ?any, validity : FormValidity ) => void
+};
+
 export default class AbstractForm extends Component {
 
-    static defaultProps = {
+    validity : FormValidity;
+
+    static defaultProps : AbstractFormProps = {
         triggerOnChangeOnInit : true
     };
 
-    constructor( props ) {
+    constructor( props : AbstractFormProps ) {
         super( props );
         this.validity = FormValidity.fromModel( this.model );
     }
@@ -24,9 +32,9 @@ export default class AbstractForm extends Component {
         }
     }
 
-    get model() { return this.props.value; }
+    get model() : Object { return this.props.value; }
 
-    get constraints() { return this.model.constructor.__constraints || {}; }
+    get constraints() : Object { return this.model.constructor.__constraints || {}; }
 
     link( prop : string ) {
         return {
@@ -44,8 +52,8 @@ export default class AbstractForm extends Component {
     setChildrenWrapper( child : React.Element ) : ?React.Element {
 
         // if the child is a form field wrapper
-        if( child && child.type && child.type.prototype &&
-            ( FormFieldWrapper.prototype.isPrototypeOf( child.type.prototype ) || FormFieldWrapper.prototype === child.type.prototype ) ) {
+        // $FlowFixMe
+        if( child && child.type && child.type.prototype && ( FormFieldWrapper.prototype.isPrototypeOf( child.type.prototype ) || FormFieldWrapper.prototype === child.type.prototype ) ) {
 
             if( !child.props || !child.props.propertyName ) {
                 throw 'FormFieldWrapper should have propertyName prop';
@@ -59,7 +67,7 @@ export default class AbstractForm extends Component {
         return child;
     }
 
-    renderChildren() : ReactElement {
+    renderChildren() : React.Element {
         return React.Children.map( this.props.children, this.setChildrenWrapper.bind( this ) );
     }
 

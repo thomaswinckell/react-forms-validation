@@ -4,7 +4,9 @@ import React, { Component, PropTypes }  from 'react';
 
 import Form, { Constraint, Number, Min, Max, Email,
     MaxLength, OneOf, FormFieldWrapper,
-    FormValidity, FormStatus }         from 'react-forms-validation';
+    FormStatus }         from 'react-forms-validation';
+
+import type { FormValidity, FormFieldValidity } from 'react-forms-validation';
 
 import Messages    from './Messages';
 
@@ -28,25 +30,34 @@ class ModelExample {
     };*/
 }
 
+
+type FormExampleState = {
+    myModel : ModelExample,
+    validity: ?FormValidity
+};
+
 export default class FormExample extends Component {
 
-    constructor( props ) {
+    state : FormExampleState;
+
+    constructor( props : Object ) {
         super( props );
         this.state = {
-            myModel : new ModelExample()
+            myModel  : new ModelExample(),
+            validity : null
         };
     }
 
-    handleFormChange = ( value : any, validity : FormValidity ) => {
+    handleFormChange( value : any, validity : FormValidity ) : void {
         this.setState( { myModel : value, validity } );
-    };
+    }
 
-    handleFormSubmit = ( event ) => {
+    handleFormSubmit( event : SyntheticMouseEvent ) : void {
         event.preventDefault();
         console.log( this.state.myModel );
-    };
+    }
 
-    renderInput( id, value, onChange, validity ) : React.Element {
+    renderInput( id : string, value : ?string, onChange : ( value : ?string ) => void , validity : FormFieldValidity ) : React.Element {
         return (
             <div className="form-group">
                 <label for={ id }>{ Messages.form[ id ].label }</label>
@@ -57,7 +68,7 @@ export default class FormExample extends Component {
         );
     }
 
-    renderCheckbox( id, value, onChange, validity ) : React.Element {
+    renderCheckbox( id : string, value : ?boolean, onChange : ( value : ?boolean ) => void, validity : FormFieldValidity ) : React.Element {
         return (
             <div class="checkbox">
                 <label>
