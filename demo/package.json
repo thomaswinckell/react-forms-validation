@@ -1,0 +1,57 @@
+{
+  "name": "react-forms-validation-demo",
+  "title": "React Form Validation demo",
+  "version": "0.0.1-beta1",
+  "authors": "Thomas Winckell",
+  "license": "MIT",
+  "dependencies": {
+    "babel-polyfill": "^6.9.1",
+    "bootstrap": "^3.3.6",
+    "classnames": "^2.2.5",
+    "lodash": "^4.13.1",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "react-forms-validation": "file:../"
+  },
+  "devDependencies": {
+    "babel-core": "^6.9.1",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-runtime": "^6.9.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
+    "html-loader": "^0.4.3",
+    "opn": "^4.0.2",
+    "postcss-flexibility": "^1.0.3",
+    "postcss-loader": "^0.9.1",
+    "pretty-hrtime": "^1.0.2",
+    "resolve-url-loader": "^1.4.3",
+    "rimraf": "^2.5.2",
+    "style-loader": "^0.13.1",
+    "template-html-loader": "0.0.3",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1",
+    "webpack-notifier": "^1.3.0"
+  },
+  "scripts": {
+    "prewebpack": "rimraf $npm_package_config_buildDir",
+    "webpack": "webpack --colors --display-error-details --progress --config ./webpack/config",
+    "start": "NODE_ENV=dev node ./webpack/dev-server  --colors --display-error-details --progress",
+    "prebuild": "rimraf $npm_package_config_buildDir && mkdir $npm_package_config_buildDir",
+    "build": "npm run webpack"
+  },
+  "config": {
+    "buildDir": "./build",
+    "devHost": "localhost",
+    "devPort": 8989
+  },
+  "engines": {
+    "node": ">=5.0.0",
+    "npm": ">=3.0.0"
+  }
+}
