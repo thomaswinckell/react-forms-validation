@@ -1,35 +1,71 @@
 /* @flow */
 
-import React, { Component, PropTypes }  from 'react';
+import classNames                               from 'classnames';
+import React, { Component, PropTypes }          from 'react';
 
-import Form, { Constraint, Number, Min, Max, Email,
-    MaxLength, OneOf, FormFieldWrapper,
-    FormStatus }         from 'react-forms-validation';
+import Form, {
+    FormField, Input,
+    FormFieldValidity
+}                            from 'react-forms-validation';
+import type { FormValidity } from 'react-forms-validation';
 
-import type { FormValidity, FormFieldValidity } from 'react-forms-validation';
+import ModelExample from './ModelExample';
+import Messages     from './Messages';
 
-import Messages    from './Messages';
 
+const validityCondition = ( validity : FormFieldValidity ) => validity.invalid; // && validity.dirty;
 
-class ModelExample {
+type ErrorMessageProps = {
+    validity : FormFieldValidity
+};
 
-    @MaxLength( 10 )
-    id : string;
+class ErrorMessage extends Component {
 
-    @Number @Min( 10 ) @Max( 20 )
-    number : number;
+    static propTypes = {
+        validity : PropTypes.instanceOf( FormFieldValidity ).isRequired
+    };
 
-    @Email
-    email : string;
+    constructor( props : ErrorMessageProps ) {
+        super( props );
+        const errorMessage = this.getErrorMessage( props.validity );
+        this.state = { errorMessage };
+    }
 
-    @Constraint( 'termsAccepted', value => !!value )
-    termsAccepted : boolean;
+    componentWillReceiveProps( nextProps : ErrorMessageProps ) {
+        const errorMessage = this.getErrorMessage( nextProps.validity );
+        this.setState( { errorMessage } );
+    }
 
-    /*static constraints = {
-        number : [ Number(), Min( 10 ), Max( 20 ) ]
-    };*/
+    getErrorMessage( validity : FormFieldValidity ) : ?string {
+        if( validityCondition( validity ) ) {
+            const constraint = validity.unsatisfiedConstraints[ 0 ];
+            let message = Messages.form[ validity.prop ].errors[ constraint.id ];
+            const messageValues = _.keys( constraint );
+            messageValues.forEach( ( key ) => {
+                message = message.replace( new RegExp( `\{${key}\}`, 'g' ), constraint[ key ] );
+            } );
+            return message;
+        }
+        return null;
+    }
+
+    render() {
+        const { errorMessage } = this.state;
+        if( !errorMessage ) {
+            return null;
+        }
+        return (
+            <div>
+                <label className="control-label">
+                    { errorMessage }
+                </label>
+            </div>
+        );
+    }
 }
 
+
+type FormExampleProps = {};
 
 type FormExampleState = {
     myModel : ModelExample,
@@ -40,7 +76,7 @@ export default class FormExample extends Component {
 
     state : FormExampleState;
 
-    constructor( props : Object ) {
+    constructor( props : FormExampleProps ) {
         super( props );
         this.state = {
             myModel  : new ModelExample(),
@@ -57,39 +93,43 @@ export default class FormExample extends Component {
         console.log( this.state.myModel );
     }
 
-    renderInput( id : string, value : ?string, onChange : ( value : ?string ) => void , validity : FormFieldValidity ) : React.Element {
+    renderInput( prop : string, value : ?string, onChange : ( value : ?string ) => void , validity : FormFieldValidity ) : React.Element {
+        const { label, placeholder } = Messages.form[ prop ];
         return (
-            <div className="form-group">
-                <label for={ id }>{ Messages.form[ id ].label }</label>
-                <input type="text" value={ value || '' } onChange={ event => onChange( event.target.value ) }
-                       className="form-control" id={ id } placeholder={ Messages.form[ id ].placeholder } />
-                <div>Errors : { JSON.stringify( validity.unsatisfiedConstraints ) }</div>
+            <div className={ classNames( 'form-group', { 'has-error' : validityCondition( validity ) } ) }>
+                <label for={ prop } className="control-label">{ label }</label>
+                <Input type="text" value={ value } onChange={ onChange }
+                       className="form-control" id={ prop } placeholder={ placeholder } />
+                <ErrorMessage validity={ validity } />
             </div>
         );
     }
 
-    renderCheckbox( id : string, value : ?boolean, onChange : ( value : ?boolean ) => void, validity : FormFieldValidity ) : React.Element {
+    renderCheckbox( prop : string, value : ?boolean, onChange : ( value : ?boolean ) => void, validity : FormFieldValidity ) : React.Element {
+        const { label } = Messages.form[ prop ];
         return (
-            <div class="checkbox">
+            <div className={ classNames( 'checkbox', { 'has-error' : validityCondition( validity ) } ) }>
                 <label>
-                    <input type="checkbox" checked={ value } onClick={ event => onChange( !value ) }/> { Messages.form[ id ].label }
+                    <Input type="checkbox" checked={ value } onClick={ event => onChange( !value ) }/> { label }
                 </label>
-                <div>Errors : { JSON.stringify( validity.unsatisfiedConstraints ) }</div>
+                <ErrorMessage validity={ validity } />
             </div>
         );
     }
 
     render() : React.Element {
         return (
-            <Form value={ this.state.myModel } onChange={ this.handleFormChange } onSubmit={ this.handleFormSubmit }>
+            <Form value={ this.state.myModel } onChange={ this.handleFormChange.bind( this ) } onSubmit={ this.handleFormSubmit.bind( this ) }>
 
-                <FormFieldWrapper propertyName="id" renderFormField={ this.renderInput } />
+                <FormField prop="id"             render={ this.renderInput } />
 
-                <FormFieldWrapper propertyName="number" renderFormField={ this.renderInput } />
+                <FormField prop="civility"       render={ this.renderInput } />
 
-                <FormFieldWrapper propertyName="email" renderFormField={ this.renderInput } />
+                <FormField prop="textNumber"     render={ this.renderInput } />
 
-                <FormFieldWrapper propertyName="termsAccepted" renderFormField={ this.renderCheckbox } />
+                <FormField prop="email"          render={ this.renderInput } />
+
+                <FormField prop="termsAccepted"  render={ this.renderCheckbox } />
 
                 <div>Model : { JSON.stringify( this.state.myModel ) }</div>
 

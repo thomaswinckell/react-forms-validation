@@ -3,19 +3,25 @@
 import _                                from 'lodash';
 import React, { Component, PropTypes }  from 'react';
 
-import FormFieldWrapper                     from './FormFieldWrapper';
+import FormField                            from './FormField';
 import FormValidity, { FormFieldValidity }  from './FormValidity';
 
 
 export type AbstractFormProps = {
-    triggerOnChangeOnInit : boolean,
     value                 : Object,
-    onChange              : ( value : ?any, validity : FormValidity ) => void
+    onChange              : ( value : ?any, validity : FormValidity ) => void,
+    triggerOnChangeOnInit : boolean
 };
 
 export default class AbstractForm extends Component {
 
     validity : FormValidity;
+
+    static propTypes = {
+        value                   : PropTypes.object.isRequired,
+        onChange                : PropTypes.func.isRequired,
+        triggerOnChangeOnInit   : PropTypes.bool
+    };
 
     static defaultProps : AbstractFormProps = {
         triggerOnChangeOnInit : true
@@ -40,8 +46,8 @@ export default class AbstractForm extends Component {
         return {
             value           : this.validity.fields[ prop ],
             requestChange   : ( fieldValidity : FormFieldValidity ) => {
-                // TODO : is merge really usefull ?
-                const newValue = _.merge( new this.model.constructor(), this.model, { [ prop ] : fieldValidity.value } );
+                let newValue = _.clone( this.model );
+                newValue[ prop ] = fieldValidity.value;
                 let validityFields = _.merge( {}, this.validity.fields, { [ prop ] : fieldValidity } );
                 this.validity = new FormValidity( validityFields );
                 this.props.onChange( newValue, this.validity );
@@ -53,14 +59,13 @@ export default class AbstractForm extends Component {
 
         // if the child is a form field wrapper
         // $FlowFixMe
-        if( child && child.type && child.type.prototype && ( FormFieldWrapper.prototype.isPrototypeOf( child.type.prototype ) || FormFieldWrapper.prototype === child.type.prototype ) ) {
+        if( child && child.type && child.type.prototype && ( FormField.prototype.isPrototypeOf( child.type.prototype ) || FormField.prototype === child.type.prototype ) ) {
 
-            if( !child.props || !child.props.propertyName ) {
-                throw 'FormFieldWrapper should have propertyName prop';
+            if( !child.props || !child.props.prop ) {
+                throw 'FormField should have a prop named `prop`';
             }
 
-            const valueLink = this.link( child.props.propertyName );
-
+            const valueLink = this.link( child.props.prop );
             return React.cloneElement( child, { valueLink } );
         }
 
@@ -75,6 +80,6 @@ export default class AbstractForm extends Component {
      * @abstract
      */
     render() : ?React.Element {
-        throw new Error( 'Form component should override the render method.' )
+        throw 'Form component should override the render method.';
     }
 }

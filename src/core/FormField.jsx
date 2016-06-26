@@ -5,7 +5,7 @@ import React, { Component, PropTypes }  from 'react';
 import type { FormFieldValidity }       from './FormValidity';
 
 
-export default class FormFieldWrapper extends Component {
+export default class FormField extends Component {
 
     get fieldValidity() : FormFieldValidity { return this.props.valueLink.value; }
 
@@ -16,7 +16,7 @@ export default class FormFieldWrapper extends Component {
     }
 
     render() {
-        const { id, value } = this.fieldValidity;
-        return this.props.renderFormField( id, value, this.onChange.bind( this ), this.fieldValidity );
+        const { prop, value } = this.fieldValidity;
+        return this.props.render( prop, value, this.onChange.bind( this ), this.fieldValidity );
     }
 }

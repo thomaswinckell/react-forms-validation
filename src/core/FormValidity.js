@@ -51,30 +51,30 @@ export default class FormValidity {
         return FormStatuses.pristine;
     }
 
-    isValid() : boolean {
+    get valid() : boolean {
         for( let key of _.keys( this.fields ) ) {
-            if ( this.fields[ key ].isInvalid() ) {
+            if ( this.fields[ key ].invalid ) {
                 return false;
             }
         }
         return true;
     }
 
-    isInvalid() : boolean {
-        return !this.isValid();
+    get isInvalid() : boolean {
+        return !this.valid;
     }
 }
 
 
 export class FormFieldValidity {
-    id                      : string;
+    prop                    : string;
     _value                  : ?any;
     constraints             : Array< Constraint >;
     status                  : FormStatus;
     unsatisfiedConstraints  : Array< Constraint >;
 
-    constructor( id : string, value : ?any = null, constraints : Array< Constraint > = [], status : FormStatus = FormStatuses.pristine ) {
-        this.id                     = id;
+    constructor( prop : string, value : ?any = null, constraints : Array< Constraint > = [], status : FormStatus = FormStatuses.pristine ) {
+        this.prop                   = prop;
         this._value                 = value;
         this.constraints            = constraints;
         this.status                 = status;
@@ -92,7 +92,11 @@ export class FormFieldValidity {
         this.unsatisfiedConstraints = this.constraints.filter( ( constraint : Constraint ) => !constraint.match( this.value ) );
     }
 
-    isValid() : boolean { return !this.unsatisfiedConstraints.length; }
+    get valid() : boolean { return !this.unsatisfiedConstraints.length; }
 
-    isInvalid() : boolean { return !this.isValid(); }
+    get invalid() : boolean { return !this.valid; }
+
+    get pristine() : boolean { return this.status === FormStatuses.pristine; }
+
+    get dirty() : boolean { return this.status === FormStatuses.dirty; }
 }

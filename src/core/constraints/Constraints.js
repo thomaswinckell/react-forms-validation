@@ -24,25 +24,15 @@ export class Constraint {
 }
 
 
-export const Required = new Constraint( 'required', value => !!value );
-
-
-export class NonEmpty extends Constraint {
-
-    constructor() {
-        super( 'nonEmpty' );
+export const Required = new Constraint( 'required', value => {
+    if( _.isArray( value ) || _.isString( value ) ) {
+        return !!value.length;
     }
-
-    match( value : any ) : boolean {
-        if( _.isArray( value ) || _.isString( value ) ) {
-            return !!value.length;
-        }
-        if( _.isObject( value ) ) {
-            return !!_.keys( value ).length;
-        }
-        return _.isNumber( value );
+    if( _.isObject( value ) ) {
+        return !!_.keys( value ).length;
     }
-}
+    return _.isNumber( value );
+} );
 
 
 export class MinLength extends Constraint {
@@ -55,6 +45,10 @@ export class MinLength extends Constraint {
     }
 
     match( value : any ) : boolean {
+        // TODO : avoid that copy/paste
+        if( !Required.match( value ) ) {
+            return true;
+        }
         if ( _.isArray( value ) || _.isString( value ) ) {
             return value.length >= this.minLength;
         }
@@ -76,6 +70,10 @@ export class MaxLength extends Constraint {
     }
 
     match( value : any ) : boolean {
+        // TODO : avoid that copy/paste
+        if( !Required.match( value ) ) {
+            return true;
+        }
         if ( _.isArray( value ) || _.isString( value ) ) {
             return value.length <= this.maxLength;
         }
@@ -94,6 +92,10 @@ export class Number extends Constraint {
     }
 
     match( value : any ) : boolean {
+        // TODO : avoid that copy/paste
+        if( !Required.match( value ) ) {
+            return true;
+        }
         return parseInt( value ).toString() === value;
     }
 }
@@ -109,6 +111,10 @@ export class Min extends Number {
     }
 
     match( value : any ) : boolean {
+        // TODO : avoid that copy/paste
+        if( !Required.match( value ) ) {
+            return true;
+        }
         return super.match( value ) && value >= this.min;
     }
 }
@@ -124,6 +130,10 @@ export class Max extends Number {
     }
 
     match( value : any ) : boolean {
+        // TODO : avoid that copy/paste
+        if( !Required.match( value ) ) {
+            return true;
+        }
         return super.match( value ) && value <= this.max;
     }
 }
@@ -139,6 +149,10 @@ export class Regexp extends Constraint {
     }
 
     match( value : any ) : boolean {
+        // TODO : avoid that copy/paste
+        if( !Required.match( value ) ) {
+            return true;
+        }
         if ( _.isString( value )  ) {
             return value.match( this.regexp );
         }
@@ -150,16 +164,20 @@ export class Regexp extends Constraint {
 export const Email = new Regexp( /\S+@\S+\.\S+/, 'email' );
 
 
-export class OneOf extends Constraint {
+export class OneOfValues extends Constraint {
 
     values : Array< any >;
 
     constructor( ...values : Array< any >  ) {
-        super( 'oneOf' );
+        super( 'oneOfValues' );
         this.values = values;
     }
 
     match( value : any ) : boolean {
+        // TODO : avoid that copy/paste
+        if( !Required.match( value ) ) {
+            return true;
+        }
         return !!_.find( this.values, v => v === value );
     }
 }
