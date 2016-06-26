@@ -2,40 +2,42 @@
 
 export default {
     form : {
-        id : {
+        id            : {
             label       : 'Id',
             placeholder : 'Write a id',
             errors      : {
                 maxLength : 'Id should have a maximum length of {maxLength} characters.',
-                minLength : 'Id should have a minimum length of {minLength} characters.'
+                minLength : 'Id should have a minimum length of {minLength} characters.',
+                required  : 'Id is required'
             }
         },
-        textNumber : {
+        textNumber    : {
             label       : 'Text Number',
             placeholder : 'Write a number',
-            errors : {
+            errors      : {
                 number : 'Should be a number.',
                 min    : 'Should be at least {min}.',
                 max    : 'Should be {max} maximum.'
             }
         },
-        email : {
+        email         : {
             label       : 'Email',
             placeholder : 'Write an email',
-            errors : {
-                email : 'Should be a valid email.'
+            errors      : {
+                email    : 'Should be a valid email.',
+                required : 'Email is required'
             }
         },
         termsAccepted : {
-            label : 'Accept terms & agreements',
+            label  : 'Accept terms & agreements',
             errors : {
                 acceptTerms : 'You should accept the terms and agreements'
             }
         },
-        civility : {
+        civility      : {
             label       : 'Civility',
             placeholder : 'Mr or Mme ?',
-            errors : {
+            errors      : {
                 oneOfValues : 'Civility should be either `Mme` or `Mr`.'
             }
         }

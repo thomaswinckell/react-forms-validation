@@ -40,6 +40,9 @@ class ErrorMessage extends Component {
         if( validityCondition( validity ) ) {
             const constraint = validity.unsatisfiedConstraints[ 0 ];
             let message = Messages.form[ validity.prop ].errors[ constraint.id ];
+            if( !message ) {
+                throw `Message key 'form.${validity.prop}.errors.${constraint.id}' not found !`;
+            }
             const messageValues = _.keys( constraint );
             messageValues.forEach( ( key ) => {
                 message = message.replace( new RegExp( `\{${key}\}`, 'g' ), constraint[ key ] );

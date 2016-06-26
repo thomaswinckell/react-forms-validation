@@ -1,12 +1,12 @@
 /* @flow */
 
-import { Constraint, Number,
+import { Constraint, Required, Number,
     Min, Max, Email, MaxLength,
     MinLength, OneOfValues }      from 'react-forms-validation';
 
 export default class ModelExample {
 
-    @MinLength( 10 ) @MaxLength( 20 )
+    @Required @MinLength( 10 ) @MaxLength( 20 )
     id : string;
 
     @OneOfValues( 'Mme', 'Mr' )
@@ -15,7 +15,7 @@ export default class ModelExample {
     @Number @Min( 10 ) @Max( 20 )
     textNumber : number;
 
-    @Email
+    @Required @Email
     email : string;
 
     @Constraint( 'acceptTerms', value => !!value )
