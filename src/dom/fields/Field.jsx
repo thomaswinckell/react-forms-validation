@@ -2,9 +2,9 @@
 
 import React, { Component, PropTypes } from 'react';
 
-export type ValueLink = {
-    value : ?any,
-    requestChange : ( value : ?any ) => void
+export type ValueLink< T > = {
+    value         : ?T,
+    requestChange : ( value : ?T ) => void
 };
 
 export default class Field extends Component {
@@ -15,11 +15,11 @@ export default class Field extends Component {
         valueLink               : PropTypes.object
     };
 
-    get valueLink() : Object { return this.props.valueLink; }
+    get valueLink() : ValueLink< any > { return this.props.valueLink; }
 
     get value() : any { return this.props.value; }
 
-    _onChange( value : ?any ) {
+    onChange( value : ?any ) : void {
         if( this.props.onChange ) {
             this.props.onChange( value, event );
         }
@@ -27,10 +27,6 @@ export default class Field extends Component {
             this.props.valueLink.requestChange( value, event );
         }
     }
-
-    onChange = ( event : SyntheticMouseEvent ) => {
-        this._onChange( event.target.value );
-    };
 
     /**
      * @abstract

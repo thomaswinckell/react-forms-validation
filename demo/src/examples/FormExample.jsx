@@ -1,5 +1,6 @@
 /* @flow */
 
+import _                                        from 'lodash';
 import classNames                               from 'classnames';
 import React, { Component, PropTypes }          from 'react';
 
@@ -19,7 +20,13 @@ type ErrorMessageProps = {
     validity : FormFieldValidity
 };
 
+type ErrorMessageState = {
+    errorMessage : ?string;
+};
+
 class ErrorMessage extends Component {
+    
+    state : ErrorMessageState;
 
     static propTypes = {
         validity : PropTypes.instanceOf( FormFieldValidity ).isRequired

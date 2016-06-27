@@ -6,9 +6,14 @@ import Field from './Field';
 
 export default class Textarea extends Field {
 
+    handleChange( event : Event ) : void {
+        // $FlowFixMe
+        this.onChange( event.target.value );
+    };
+
     render() : React.Element {
         return (
-            <textarea { ...this.props } value={ this.value || '' } onChange={ this.onChange } />
+            <textarea { ...this.props } value={ this.value || '' } onChange={ e => this.onChange( e ) } />
         )
     }
 }
