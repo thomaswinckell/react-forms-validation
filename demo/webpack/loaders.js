@@ -16,7 +16,7 @@ const htmlLoader = [
         'version=' + pkg.version,
         'title=' + pkg.title || pkg.name,
         'name=' + pkg.title,
-        'env=' + process.env.NODE_ENV
+        'dev=' + DEV
     ].join( '&' )
 ].join( '!' );
 

@@ -9,7 +9,6 @@ const DEV = process.env.NODE_ENV === 'dev';
 const jsBundle = path.join( 'js', util.format( '[name].js' ) );
 const entries = {
     app       : [ 'app.js' ],
-    vendors   : [ 'react', 'lodash', 'classnames' ],
     polyfills : [ 'babel-polyfill' ]
 };
 
