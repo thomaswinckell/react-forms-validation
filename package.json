@@ -21,7 +21,7 @@
   },
   "scripts": {
     "prebuild": "rm -rf $npm_package_config_buildDir && mkdir $npm_package_config_buildDir",
-    "build": "cp -R src/* $npm_package_config_buildDir && cp package.json $npm_package_config_buildDir && cp Readme.md $npm_package_config_buildDir"
+    "build": "cp -R src/* $npm_package_config_buildDir && cp package.json $npm_package_config_buildDir && cp Readme.md $npm_package_config_buildDir",
     "test": "flow"
   },
   "config": {
