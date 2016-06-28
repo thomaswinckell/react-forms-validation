@@ -15,7 +15,7 @@ const htmlLoader = [
         'engine=lodash',
         'version=' + pkg.version,
         'title=' + pkg.title || pkg.name,
-        'name=' + pkg.title,
+        'name=' + pkg.name,
         'dev=' + DEV
     ].join( '&' )
 ].join( '!' );
