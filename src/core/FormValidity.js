@@ -51,6 +51,10 @@ export default class FormValidity {
         return FormStatuses.pristine;
     }
 
+    get pristine() : boolean { return this.status === FormStatuses.pristine; }
+
+    get dirty() : boolean { return this.status === FormStatuses.dirty; }
+
     get valid() : boolean {
         for( let key of _.keys( this.fields ) ) {
             if ( this.fields[ key ].invalid ) {
@@ -60,7 +64,7 @@ export default class FormValidity {
         return true;
     }
 
-    get isInvalid() : boolean {
+    get invalid() : boolean {
         return !this.valid;
     }
 }
