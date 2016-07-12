@@ -11,8 +11,11 @@ export default class Form extends AbstractForm {
      * @override AbstractForm
      */
     render() : React.Element {
+        
+        const { triggerOnChangeOnInit, ...other } = this.props;
+        
         return(
-            <form { ...this.props } onChange={ null }>
+            <form { ...other } onChange={ null }>
                 { this.renderChildren() }
             </form>
         );
