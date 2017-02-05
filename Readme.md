@@ -1,4 +1,4 @@
 React Forms Validation
 ======================
 
-Still in development. Will come soon.
+This project was an experiment. Not maintained anymore.
